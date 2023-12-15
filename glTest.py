@@ -5,6 +5,7 @@ import math
 import meshplot as mp
 import scipy as sp
 import ipywidgets as iw
+import random
 
 from PIL import Image
 from PIL import ImageOps
@@ -66,6 +67,8 @@ def parametrize(v,f):
     ## Harmonic parametrization for the internal vertices
     return igl.harmonic(v, f, bnd, bnd_uv, 1)
 
+def randDecimal(length):
+    return float(random.uniform(0,length))/float(length)
 
 v, f = igl.read_triangle_mesh("data/fandisk.obj")
 uv = parametrize(v,f)
@@ -73,9 +76,22 @@ v_p = np.hstack([uv, np.zeros((uv.shape[0],1))])
 vertices = list(v_p)
 faces = list(f)
 
+face_index_list = []
+face_index_map = {}
+for i in range(f.shape[0]):
+    face_col = [randDecimal(10),randDecimal(10),randDecimal(10)]
+    face_index_list.append(face_col)
+    while str(face_index_list[i]) in face_index_map:
+        face_index_list[i] = [randDecimal(10000),randDecimal(10000),randDecimal(10000)]
+    face_index_map[str(face_index_list[i])] = i
+face_index_list = np.array(face_index_list)
+
+
+
 def Render():
     glBegin(GL_TRIANGLES)
-    for face in faces:
+    for facei, face in enumerate(faces):
+        glColor3fv(tuple(face_index_list[facei]))
         for vertex in face:
             glVertex3fv(tuple(vertices[vertex]))
     glEnd()
@@ -89,7 +105,8 @@ def main():
 
     glOrtho(-1.0,1.0,-1.0,1.0,1.0,-1.0)
 
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    #glPolygonMode( GL_FRONT_AND_BACK, GL_LINE )
+    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL )
 
     while True:
         for event in pygame.event.get():
