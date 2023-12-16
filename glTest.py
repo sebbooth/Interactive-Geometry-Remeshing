@@ -70,7 +70,7 @@ def parametrize(v,f):
 def randDecimal(length):
     return float(random.uniform(0,length))/float(length)
 
-v, f = igl.read_triangle_mesh("data/fandisk.obj")
+v, f = igl.read_triangle_mesh("data/curve.off")
 uv = parametrize(v,f)
 v_p = np.hstack([uv, np.zeros((uv.shape[0],1))])
 vertices = list(v_p)

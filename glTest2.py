@@ -12,6 +12,8 @@ from PIL import ImageOps
 
 import uuid
 
+
+
 # =========================================
 # I left here only necessary constants, it's easy to search for the rest
 
@@ -156,7 +158,7 @@ def main():
 
     # In OpenGL context create Framebuffer Object (FBO) and attach Color and Depth render buffers to it
 
-    width, height = 300, 300
+    width, height = 10000, 10000
     buffers = myglCreateBuffers(width, height)
 
     # Init our renderer
